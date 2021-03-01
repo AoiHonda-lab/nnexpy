@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This repository is a compilation of my work during my master course at Kyushu Institute of Technology. A clone of the repository is also available on [KIT Honda Lab's github](https://github.com/honda-lab-kit/nn-expressiveness). The purpose of this repository is to provide with some python code to get started with homology and knot theory as a mean to evaluate neural networks' expressiveness.
+This repository is minimum version of [nnexpy](https://github.com/Spiilgriim/nnexpy). The purpose of this repository is to provide the minimal code to replicate the experiment that originally inspired part of my research. The article describing the original experiment can be found [here](https://arxiv.org/abs/1802.04443). 
 
 ## Requirement
 
@@ -19,10 +19,10 @@ For more information refer to [conda documentation](https://docs.conda.io/projec
 
 ## Usage
 
-To use this code, copy the nnexpy folder in your python project and import `nnexpy`
+To use this code, copy the nnexpy-min folder in your python project and import `nnexpy-min`
 
 ```python
-import nnexpy
+import nnexpy-nnexpy
 ```
 
 NNexpy contains the following classes:
@@ -31,20 +31,8 @@ NNexpy contains the following classes:
 * [DataDescriptor](docs/DataDescriptor.md)
 * [DataInstance](docs/DataInstance.md)
 * [DataPoint](docs/DataPoint.md)
-* [KnotDescriptor](docs/KnotDescriptor.md)
 * [NetworkGenerator](docs/NetworkGenerator.md)
-* [RandomNetwork](docs/RandomNetwork.md)
 
-## Examples
+## Replication
 
-The [`examples`](examples/) folder is a collection of the various scripts I have been creating during my research. Here follows a short description of all of them.
-
-* [`ai_playground.py`](examples/ai_playground.py): Generates a few `DataInstance` with different homology and then call `rasScript` to train batch of networks on these different datasets.
-* [`analyse_network.py`](examples/analyse_network.py): Computes betti numbers and makes the PCA to obtain a trajectory from Keras + Tensorflow neural network.
-* [`bettiScript.py`](examples/bettiScript.py): Computes Betti numbers of Keras + Tensorflow neural networks on a `DataDescriptor`
-* [`oldBottleneckScript.py`](examples/bottleneckScript.py): Computes Betti numbers of Keras + Tensorflow neural networks on a `DataDescriptor`
-* [`compare_results.py`](examples/compare_results.py): Script to use `bettiScript`, `oldBettiScript` and `oldBottleneckScript` as subprocesses
-* [`oldBettiScript.py`](examples/oldBettiScript.py): Another version of betti number computation of Keras + Tensorflow neural networks on a `DataDescriptor`
-* [`rasScript.py`](examples/rasScript.py): Trains a Keras + Tensorflow neural network on a given `DataInstance`
-* [`test_random_networks.py`](examples/test_random_networks.py): Generate PCA of random networks with an input trajectory
-* [`visualize_results.py`](examples/visualize_results.py): Plot the predicted data of Keras + Tensorflow networks on a `DataInstance`
+To replicate the original experiment multiple scripts have been created and can be found in [`replication`](replication/)
