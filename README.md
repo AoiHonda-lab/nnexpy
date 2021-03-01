@@ -22,7 +22,7 @@ For more information refer to [conda documentation](https://docs.conda.io/projec
 To use this code, copy the nnexpy-min folder in your python project and import `nnexpy-min`
 
 ```python
-import nnexpy-nnexpy
+import nnexpy-min
 ```
 
 NNexpy contains the following classes:
