@@ -137,3 +137,4 @@ instance_*.zip
 katlas.*
 .vscode/
 nnexpy/__pycache__/
+/replication/nnexpy_min/

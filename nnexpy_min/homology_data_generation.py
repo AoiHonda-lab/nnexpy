@@ -28,7 +28,7 @@ class DataDescriptor(object):
         radiusList = kwargs.get('radiusList', None)
         maxStrata = kwargs.get('maxStrata', 1)
         minStrata = kwargs.get('minStrata', 1)
-        random = kwargs.get('random', None)
+        seed = kwargs.get('seed', None)
         nHoles = kwargs.get('nHoles', None)
         maxRadius = min([x['max'] - x['min']
                          for x in self.bounds.boundsCoordinates])
@@ -37,8 +37,8 @@ class DataDescriptor(object):
             'holeDimension', [self.dimension] * nHoles)
         self.orientation = kwargs.get('orientation', None)
 
-        if random:
-            r.seed(random)
+        if seed:
+            r.seed(seed)
         if not centerList and not nHoles and not radiusList:
             raise ValueError(
                 'Either centerList, nHoles, or radiusList is required')
@@ -194,9 +194,9 @@ class DataDescriptor(object):
         import numpy as np
         classNumber = kwargs.get('classNumber', 2)
         nPoints = kwargs.get('nPoints', 1000)
-        random = kwargs.get('random', None)
-        if random:
-            r.seed(random)
+        seed = kwargs.get('seed', None)
+        if seed:
+            r.seed(seed)
         points = []
         if classNumber < 2:
             raise ValueError(
@@ -257,6 +257,53 @@ class DataDescriptor(object):
                 if test:
                     points.append(temp)
         return DataInstance({'classNumber': classNumber, 'nPoints': nPoints, 'points': points, 'dimension': self.dimension})
+
+    def generateDataAlt(self, *args, **kwargs):
+        import math as m
+        import random as r
+        import numpy as np
+        nPoints = kwargs.get('nPoints', 1000)
+        seed = kwargs.get('seed', None)
+        if seed:
+            r.seed(seed)
+        points = []
+        pointsPerStrata = nPoints // sum(map(len, self.radiusList))
+        for j in range(len(self.centerList)):
+            radiusList = self.radiusList[j]
+            holeDimension = self.holeDimension[j]
+            center = self.centerList[j].coordinates
+            for _ in range(len(radiusList) * pointsPerStrata):
+                stratum = r.choice(radiusList)
+                radiusProp = r.random()**(1/abs(holeDimension))
+                radiusLength = (
+                    radiusProp * stratum[1] + (1 - radiusProp) * stratum[0])
+                temp = []
+                for i in range(len(center)):
+                    a = r.random()
+                    temp.append(2 * a - 1)
+                randomVector = np.array(temp)
+                randomVector = (
+                    radiusLength / np.sqrt(np.sum(randomVector ** 2))) * randomVector
+                points.append(
+                    DataPoint(coordinates=center + randomVector, cluster=1))
+
+        for _ in range(nPoints):
+            test = False
+            while not test:
+                test = True
+                temp = []
+                for i in range(self.dimension):
+                    temp.append(
+                        (self.bounds.boundsCoordinates[i]['max'] - self.bounds.boundsCoordinates[i]['min']) * r.random() + self.bounds.boundsCoordinates[i]['min'])
+                temp = DataPoint(coordinates=temp,
+                                 dimension=self.dimension)
+                for holeIndex in range(len(self.centerList)):
+                    for stratum in self.radiusList[holeIndex]:
+                        if temp.distanceTo(self.centerList[holeIndex]) <= stratum[1] and temp.distanceTo(self.centerList[holeIndex]) >= stratum[0]:
+                            test = False
+                if test:
+                    points.append(temp)
+        return DataInstance({'classNumber': 2, 'nPoints': nPoints, 'points': points, 'dimension': self.dimension})
 
 
 class DataInstance(object):
@@ -385,113 +432,32 @@ class DataInstance(object):
         return maxDistance
 
     def bettiNumbers(self, *args, **kwargs):
-        from gudhi import RipsComplex
+        from gudhi import RipsComplex, plot_persistence_diagram, plot_persistence_barcode, sparsify_point_set
         import random as r
         import numpy as np
-        nPoints = kwargs.get('nPoints', self.nPoints)
-        targetCluster = kwargs.get('targetCluster', [1])
-        maxEdge = kwargs.get('maxEdge', 10)
-        maxDim = kwargs.get('maxDim', self.dimension)
-        fromValue = kwargs.get('fromValue', 0.05)
-        toValue = kwargs.get('toValue', 0.05)
-        pointListTemp = []
-        for point in self.points:
-            if point.cluster in targetCluster:
-                pointListTemp.append(np.array(point.coordinates))
-
-        pointList = []
-        for point in pointListTemp:
-            random = r.random()
-            if random <= nPoints/len(pointListTemp):
-                pointList.append(point)
-        point_complex = RipsComplex(
-            max_edge_length=maxEdge, points=pointList)
-        simplex_tree = point_complex.create_simplex_tree(
-            max_dimension=maxDim)
-        persistence = simplex_tree.persistence()
-        return simplex_tree.persistent_betti_numbers(from_value=fromValue, to_value=toValue)
-
-    def newBettiNumbers(self, *args, **kwargs):
-        from networkx import Graph, connected_components, number_connected_components
-        import numpy as np
-        import random as r
-        from .homology_utils import findPointStructDimension
+        import matplotlib.pyplot as plt
         targetCluster = kwargs.get('targetCluster', [1])
         threshold = kwargs.get('threshold', 0.05)
-        nPoints = kwargs.get('nPoints', self.nPoints)
-        errorRate = kwargs.get('errorRate', 0.005)
+        sparsifyThreshold = kwargs.get('sparsifyThreshold', threshold/8)
         plot = kwargs.get('plot', False)
-        showProgress = kwargs.get('showProgress', False)
-        # Build graph
-        G = Graph()
-        pointListTemp = []
+        pointList = []
         for point in self.points:
             if point.cluster in targetCluster:
-                pointListTemp.append(np.array(point.coordinates))
+                pointList.append(np.array(point.coordinates))
 
-        pointList = []
-        for point in pointListTemp:
-            random = r.random()
-            if random <= nPoints/len(pointListTemp):
-                pointList.append(point)
-
-        n = len(pointList)//100
-        nodes = [i for i in range(len(pointList))]
-        edges = []
-        for i in range(len(pointList)):
-            if i % 100 == 0 and showProgress:
-                print(str(i//100) + " / " + str(n))
-            for j in range(i+1, len(pointList)):
-                dist = np.sqrt(
-                    np.sum((pointList[i] - pointList[j])**2))
-                if dist <= threshold:
-                    edges.append((i, j))
-        G.add_nodes_from(nodes)
-        G.add_edges_from(edges)
-        conComp = connected_components(G)
-        conCompNumber = number_connected_components(G)
-        centers = []
-        compDim = []
+        pointList = sparsify_point_set(
+            points=pointList, min_squared_dist=sparsifyThreshold**2)
+        point_complex = RipsComplex(
+            max_edge_length=threshold/2, points=pointList)
+        simplex_tree = point_complex.create_simplex_tree(
+            max_dimension=self.dimension)
+        persistence = simplex_tree.persistence()
         if plot:
-            points = []
-        ball = [False for _ in range(conCompNumber)]
-        for e, z in enumerate(conComp):
-            x = list(z)
-            errorCount = 0
-            if len(x) > 1 and errorCount < errorRate*nPoints:
-                origin = pointList[x[0]]
-                temp = [0 for _ in range(len(origin))]
-                for k in range(len(x)):
-                    temp += pointList[x[k]]
-
-                temp /= len(x)
-                compDim.append(findPointStructDimension(
-                    [pointList[e] for e in x]))
-                centers.append(temp)
-                for pt in x:
-                    dist = np.sqrt(
-                        np.sum((pointList[pt] - centers[-1])**2))
-                    if dist <= threshold:
-                        ball[e] = True
-            else:
-                errorCount += 1
-            if plot:
-                for point in x:
-                    points.append(DataPoint(coordinates=pointList[point],
-                                            dimension=self.dimension, cluster=e + 1))
-
-        if plot:
-            temp = DataInstance({'dimension': self.dimension, 'points': points, 'nPoints': len(
-                points), 'classNumber': conCompNumber + 1})
-            temp.plot(noBack=True)
-
-        betti = [0 for _ in range(self.dimension)]
-        for i in range(len(centers)):
-            if not ball[i]:
-                betti[compDim[i]] += 1
-            else:
-                betti[0] += 1
-        return betti
+            plot_persistence_barcode(persistence)
+            plt.plot()
+            plot_persistence_diagram(persistence)
+            plt.plot()
+        return simplex_tree.betti_numbers()
 
 
 class DataPoint(object):

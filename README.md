@@ -1,4 +1,4 @@
-# NNexpy (A bunch of python script and classes to experiment with homology, knot theory and neural networks) 
+# NNexpy-min (A fork of NNexpy for the replication of the original experiment)
 
 ## Introduction
 
@@ -19,10 +19,10 @@ For more information refer to [conda documentation](https://docs.conda.io/projec
 
 ## Usage
 
-To use this code, copy the nnexpy-min folder in your python project and import `nnexpy-min`
+To use this code, copy the nnexpy_min folder in your python project and import `nnexpy_min`
 
 ```python
-import nnexpy-min
+import nnexpy_min
 ```
 
 NNexpy contains the following classes:
@@ -35,4 +35,4 @@ NNexpy contains the following classes:
 
 ## Replication
 
-To replicate the original experiment multiple scripts have been created and can be found in [`replication`](replication/)
+To replicate the original experiment multiple scripts have been created and can be found in [`replication`](replication/). `replication.py` replicates the training part of the original experiment. The other files provide function useful for that purpose. 
