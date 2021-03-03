@@ -370,7 +370,7 @@ class DataInstance(object):
                 coordinates=data[i],
                 cluster=label[i]
             ))
-        return DataInstance({'dimension': self.dimension, 'classNumber': np.max(label) + 1, 'nPoints': len(label), 'points': points, 'orientation': self.orientation})
+        return DataInstance({'dimension': self.dimension, 'classNumber': np.max(label) + 1, 'nPoints': len(label), 'points': points})
 
     def predictAndEvaluate(self, model, *args, **kwargs):
         data, label = self.numpyify()
