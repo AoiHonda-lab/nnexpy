@@ -69,7 +69,7 @@ class NetworkGenerator(object):
         model = self.build_model(
             depth=depth, input_shape=input_shape, width=width, firstLayerWidth=firstLayerWidth, activation='relu', initStdDev=hom0)
         self.train_and_save(model=model, epoch_number=epoch_number, data=data, label=label, save_path=mypath + str(
-            depth) + '_' + str(firstLayerWidth) + '_' + str(iteration) + '_' + 'layer.h5', batch_size=32, loss="binary_crossentropy")
+            depth) + '_' + str(firstLayerWidth) + '_' + str(iteration) + '.h5', batch_size=32, loss="binary_crossentropy")
         import gc
         del model
         gc.collect()
