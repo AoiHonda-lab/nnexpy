@@ -27,7 +27,7 @@ data, label = instance.numpyify()
 if not os.path.isdir('../models/' + str(x[0]) + '_' + str(x[1])):
     os.mkdir('../models/' + str(x[0]) + '_' + str(x[1]))
 nnexpy_min.NetworkGenerator().full_net_combined(
-    depth, depth, width, (2,), '../models/' + str(x[0]) + '_' + str(x[1]) + '/' + str(k) + '_', 2000, data, label)
+    depth, depth, width, k, (2,), '../models/' + str(x[0]) + '_' + str(x[1]) + '/', 10000, max(x[0], 1), data, label)
 f = open('../models/training.csv', 'a')
 f.write(str(x[0]) + ',' + str(x[1]) + ',' + str(seed) + ',' +
         str(depth) + ',' + str(width) + ',' + str(k) + '\n')
