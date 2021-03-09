@@ -48,3 +48,17 @@ For the purpose of replicating the original experiment, we provide some scripts 
 The number of networks trained in the end will be `((CANTOR + 1)^2 - 1) x (DEPTH_RANGE[1] - DEPTH_RANGE[0]) x (WIDTH_RANGE[1] - WIDTH_RANGE[0]) x ITERATIONS`. For the default parameters it means 5,376,000 networks.
 
 More information on the purpose of each script is available in [`replication`](replication/)
+
+To do a full replication, you first need to copy `nnexpy_min` to the `replication` folder. After configuring `params.py` to your liking (most likely computation capacities), you need to run `replication.py`. Once `replication.py`'s run is over or during the run you can run `evaluation_betti.py`. I will compute the betti numbers for the results already written in `TRAINING_CSV`. `evaluation_betti` can be given a runtime parameter to chose the line of `TRAINING_CSV` it will start to read from. If none is given, `evaluation_betti` will start from 0 and overwrite `EVALUATION_CSV` otherwise it will append to it.  
+
+Typically you would have to run these commands on `bash`:
+
+```shell
+cp -r nnexpy_min replication
+conda env create -f environment.yml
+conda activate nnexpy_min
+cd replication
+python3 replication.py
+python3 evaluate_betti.py 0
+```
+

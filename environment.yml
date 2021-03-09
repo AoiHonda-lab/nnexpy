@@ -1,4 +1,4 @@
-name: nnexpy
+name: nnexpy_min
 channels:
   - conda-forge
   - anaconda
