@@ -14,9 +14,6 @@ Data Descriptor is an object used to store all information that caracterize a se
 
 `holeDimension` (`[int]`): Dimension of each homology. Length corresponds to `centerList` and `radiusList`'s length
 
-`orientation` (`[[int]]`): Array containing the orientation of each feature. It indicates the index of the elements of the cannonical basis constituing the subspace in which the feature does not live. For instance if `dimension = 3` writting the cannonical basis {(1, 0, 0), (0, 1, 0), (0, 0, 1)}, `orientation=[[1]]` indicates that the feature is living in the plane spanned by {(1, 0, 0), (0, 0, 1)}. Length corresponds to `holeDimension` and `centerList`'s length. 
-
-
 ## Constructors
 
 ```python

@@ -5,6 +5,7 @@ import os
 import sys
 import gc
 import tensorflow as tf
+import params
 
 x = [int(sys.argv[1]), int(sys.argv[2])]
 depth = int(sys.argv[3])
@@ -27,7 +28,7 @@ data, label = instance.numpyify()
 if not os.path.isdir('../models/' + str(x[0]) + '_' + str(x[1])):
     os.mkdir('../models/' + str(x[0]) + '_' + str(x[1]))
 nnexpy_min.NetworkGenerator().full_net_combined(
-    depth, depth, width, k, (2,), '../models/' + str(x[0]) + '_' + str(x[1]) + '/', 10000, max(x[0], 1), data, label)
+    depth, depth, width, k, (2,), params.MODELS_FOLDER + str(x[0]) + '_' + str(x[1]) + '/', 10000, max(x[0], 1), data, label)
 f = open('../models/training.csv', 'a')
 f.write(str(x[0]) + ',' + str(x[1]) + ',' + str(seed) + ',' +
         str(depth) + ',' + str(width) + ',' + str(k) + '\n')

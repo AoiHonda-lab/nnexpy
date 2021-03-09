@@ -2,9 +2,10 @@ from tensorflow import keras
 import nnexpy_min
 import datasets_generation
 from sys import argv
+import params
 
-models_directory = "../models/"
-evaluation_file = "../models/evaluation.csv"
+models_directory = params.MODELS_FOLDER
+evaluation_file = params.EVALUATION_CSV
 
 homology = [int(argv[1]), int(argv[2])]
 seed = int(argv[3])

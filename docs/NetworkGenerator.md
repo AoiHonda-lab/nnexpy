@@ -28,3 +28,4 @@ full_net_combined(depth, input_shape, save_path, epoch_number, data, label):
 ```
 Executes `build_model` then `train_and_save` with the given parameters, `batch_size = 64` and `loss='binary_crossentropy'`
 
+In `NNexpy_min` the default parameters are chosen to replicate the parameters described in the original article.

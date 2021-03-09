@@ -1,9 +1,10 @@
 import csv
 import subprocess
 import sys
+import params
 
-training_file_path = '../models/training.csv'
-evaluation_file = '../models/evaluation.csv'
+training_file_path = params.TRAINING_CSV
+evaluation_file = params.EVALUATION_CSV
 
 index_start = 0
 if len(sys.argv) > 1:
