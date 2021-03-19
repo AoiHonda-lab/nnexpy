@@ -45,7 +45,7 @@ class NetworkGenerator(object):
         accTracker = 0
         epochNumber = 0
         lossCountdown = 0
-        bestLoss = 2*32 - 1
+        bestLoss = 2**32 - 1
         while epochNumber < epoch_number and accTracker < targetAcc and lossCountdown < lossIncreaseStop:
             temp = model.fit(data, label, validation_split=0.2, batch_size=batch_size_compute(
                 initial_batch_size, epochNumber), epochs=1, shuffle=True, verbose=2, callbacks=callbacks)
