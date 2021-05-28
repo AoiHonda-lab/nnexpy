@@ -49,12 +49,12 @@ class NetworkGenerator(object):
         while epochNumber < epoch_number and accTracker < targetAcc and lossCountdown < lossIncreaseStop:
             temp = model.fit(data, label, validation_split=0.2, batch_size=batch_size_compute(
                 initial_batch_size, epochNumber), epochs=1, shuffle=True, verbose=2, callbacks=callbacks)
-            accTracker = temp.history.get('acc')[-1]
-            if temp.history.get('loss')[-1] >= bestLoss:
+            accTracker = temp.history['accuracy'][-1]
+            if temp.history['loss'][-1] >= bestLoss:
                 lossCountdown += 1
             else:
                 lossCountdown = 0
-            bestLoss = min(temp.history.get('loss')[-1], bestLoss)
+            bestLoss = min(temp.history['loss'][-1], bestLoss)
             epochNumber += 1
         model.save(save_path)
         import gc

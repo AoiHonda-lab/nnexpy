@@ -13,10 +13,10 @@ ITERATIONS = 100
 # The number of networks trained in the end will be ((CANTOR + 1)^2 - 1) x (DEPTH_RANGE[1] - DEPTH_RANGE[0]) x (WIDTH_RANGE[1] - WIDTH_RANGE[0]) x ITERATIONS. For the default parameters it means 5,376,000 networks.
 
 # Path to store models (linux style, must end with /)
-MODELS_FOLDER = '../models/'
+MODELS_FOLDER = '/media/alexandre/0C83-6F0E/transfer/models/'
 
 # Path to store training information
-TRAINING_CSV = '../models/training.csv'
+TRAINING_CSV = '/media/alexandre/0C83-6F0E/transfer/models/training.csv'
 
 # Path to store evaluation information
-EVALUATION_CSV = '../models/evaluation.csv'
+EVALUATION_CSV = '/media/alexandre/0C83-6F0E/transfer/models/evaluation.csv'
